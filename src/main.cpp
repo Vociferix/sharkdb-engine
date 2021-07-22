@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string_view>
 
-void help(const char* prog) {
-    std::cerr << "Usage: " << prog << " [ read | dissect ]\n";
-}
+void help(const char* prog) { std::cerr << "Usage: " << prog << " [ read | dissect ]\n"; }
 
 int main(int argc, char** argv) {
     constexpr std::string_view read = "read";
@@ -17,13 +15,9 @@ int main(int argc, char** argv) {
     if (argc > 2) {
         std::cerr << "Unexpected arguments:";
         if (argv[1] == read || argv[1] == dissect) {
-            for (int i = 2; i < argc; ++i) {
-                std::cerr << ' ' << argv[i];
-            }
+            for (int i = 2; i < argc; ++i) { std::cerr << ' ' << argv[i]; }
         } else {
-            for (int i = 1; i < argc; ++i) {
-                std::cerr << ' ' << argv[i];
-            }
+            for (int i = 1; i < argc; ++i) { std::cerr << ' ' << argv[i]; }
         }
         std::cerr << '\n';
         help(*argv);
