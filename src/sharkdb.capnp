@@ -195,11 +195,6 @@ struct Ieee80211ax {
     }
 }
 
-struct Ieee80211AggregateInfo {
-    flags @0 :UInt32;
-    id @1 :UInt32;
-}
-
 struct Ieee80211PHdr {
     fcsLen @0 :Int32;
     decrypted @1 :Bool;
@@ -258,11 +253,14 @@ struct Ieee80211PHdr {
     }
     aggregateInfo :union {
         none @33 :Void;
-        some @34 :Ieee80211AggregateInfo;
+        some :group {
+            flags @34 :UInt32;
+            id @35 :UInt32;
+        }
     }
     zeroLengthPsduType :union {
-        none @35 :Void;
-        some @36 :UInt8;
+        none @36 :Void;
+        some @37 :UInt8;
     }
 }
 
@@ -301,18 +299,16 @@ struct K12PHdr {
     stackFile @2 :Text;
     inputType @3 :UInt32;
 
-    struct InputInfoAtm {
-        vp @0 :UInt16;
-        vc @1 :UInt16;
-        cid @2 :UInt16;
-    }
-
     inputInfo :union {
-        atm @4 :InputInfoAtm;
-        ds0mask @5 :UInt32;
+        atm :group {
+            vp @4 :UInt16;
+            vc @5 :UInt16;
+            cid @6 :UInt16;
+        }
+        ds0mask @7 :UInt32;
     }
 
-    extraInfo @6 :Data;
+    extraInfo @8 :Data;
 }
 
 struct LapdPHdr {
@@ -329,22 +325,16 @@ struct ErfPHdr {
     wlen @5 :UInt16;
 }
 
-struct ErfEHdr {
-    ehdr @0 :UInt64;
-}
-
-struct ErfEthHdr {
-    offset @0 :UInt8;
-    pad @1 :UInt8;
-}
-
 struct ErfMcPHdr {
     phdr @0 :ErfPHdr;
-    ehdrList @1 :List(ErfEHdr);
+    ehdrList @1 :List(UInt64); # struct erf_ehdr
     subhdr :union {
-        ethHdr @2 :ErfEthHdr;
-        mcHdr @3 :UInt32;
-        aal2Hdr @4 :UInt32;
+        ethHdr :group {
+            offset @2 :UInt8;
+            pad @3 :UInt8;
+        }
+        mcHdr @4 :UInt32;
+        aal2Hdr @5 :UInt32;
     }
 }
 
