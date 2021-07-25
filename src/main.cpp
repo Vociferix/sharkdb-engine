@@ -1,7 +1,17 @@
+#include <glib.h>
+#include <wsutil/privileges.h>
+
 #include <iostream>
 #include <string_view>
 
+#include "read.hpp"
+
 void help(const char* prog) { std::cerr << "Usage: " << prog << " [ read | dissect ]\n"; }
+
+void init() {
+    init_process_policies();
+    relinquish_special_privs_perm();
+}
 
 int main(int argc, char** argv) {
     constexpr std::string_view read = "read";
@@ -25,9 +35,10 @@ int main(int argc, char** argv) {
     }
 
     if (argv[1] == read) {
-        std::cerr << "read mode\n";
-        return 0;
+        init();
+        return sharkdb::read();
     } else if (argv[1] == dissect) {
+        init();
         std::cerr << "dissect mode\n";
         return 0;
     }

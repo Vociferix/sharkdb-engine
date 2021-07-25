@@ -29,19 +29,39 @@ ExternalProject_Add(wireshark
     INSTALL_COMMAND ""
 )
 
+list(APPEND CMAKE_MODULE_PATH
+    "${CMAKE_CURRENT_SOURCE_DIR}/wireshark/cmake/modules"
+)
+
+find_package(GLIB2 "2.32.0" REQUIRED)
+find_package(GMODULE2)
+find_package(GTHREAD2)
+find_package(ZLIB)
+
 add_library(Wireshark INTERFACE)
 if(WIN32)
     target_link_libraries(Wireshark INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwireshark.lib"
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwiretap.lib"
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwsutil.lib"
+        ${GLIB2_LIBRARIES}
+        ${GMODULE2_LIBRARIES}
+        ${GTHREAD2_LIBRARIES}
+        ${ZLIB_LIBRARIES}
     )
 else()
     target_link_libraries(Wireshark INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwireshark.a"
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwiretap.a"
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwsutil.a"
+        ${GLIB2_LIBRARIES}
+        ${GMODULE2_LIBRARIES}
+        ${GTHREAD2_LIBRARIES}
+        ${ZLIB_LIBRARIES}
     )
 endif()
-target_include_directories(Wireshark INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/wireshark")
+target_include_directories(Wireshark INTERFACE
+    "${CMAKE_CURRENT_SOURCE_DIR}/wireshark"
+    "${GLIB2_INCLUDE_DIRS}"
+)
 add_dependencies(Wireshark wireshark)

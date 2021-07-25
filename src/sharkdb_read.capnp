@@ -1,10 +1,5 @@
 @0xe962ca985a4efadb;
 
-struct NSTime {
-    secs @0 :Int64;
-    nsecs @1 :Int32;
-}
-
 struct EthPHdr {
     fcsLen @0 :Int32;
 }
@@ -181,7 +176,7 @@ struct Ieee80211ad {
 
 struct Ieee80211ax {
     nsts @0 :UInt8;
-    ncs :union {
+    mcs :union {
         none @1 :Void;
         some @2 :UInt8;
     }
@@ -202,65 +197,66 @@ struct Ieee80211PHdr {
     noAMsdus @3 :Bool;
     phy @4 :UInt32;
     phyInfo :union {
-        info11fhss @5 :Ieee80211Fhss;
-        info11b @6 :Ieee80211b;
-        info11a @7 :Ieee80211a;
-        info11g @8 :Ieee80211g;
-        info11n @9 :Ieee80211n;
-        info11ac @10 :Ieee80211ac;
-        info11ad @11 :Ieee80211ad;
-        info11ax @12 :Ieee80211ax;
+        none @5 :Void;
+        info11fhss @6 :Ieee80211Fhss;
+        info11b @7 :Ieee80211b;
+        info11a @8 :Ieee80211a;
+        info11g @9 :Ieee80211g;
+        info11n @10 :Ieee80211n;
+        info11ac @11 :Ieee80211ac;
+        info11ad @12 :Ieee80211ad;
+        info11ax @13 :Ieee80211ax;
     }
     channel :union {
-        none @13 :Void;
-        some @14 :UInt16;
+        none @14 :Void;
+        some @15 :UInt16;
     }
     frequency :union {
-        none @15 :Void;
-        some @16 :UInt32;
+        none @16 :Void;
+        some @17 :UInt32;
     }
     dataRate :union {
-        none @17 :Void;
-        some @18 :UInt16;
+        none @18 :Void;
+        some @19 :UInt16;
     }
     signalPercent :union {
-        none @19 :Void;
-        some @20 :UInt8;
+        none @20 :Void;
+        some @21 :UInt8;
     }
     noisePercent :union {
-        none @21 :Void;
-        some @22 :UInt8;
+        none @22 :Void;
+        some @23 :UInt8;
     }
     signalDbm :union {
-        none @23 :Void;
-        some @24 :Int8;
+        none @24 :Void;
+        some @25 :Int8;
     }
     noiseDbm :union {
-        none @25 :Void;
-        some @26 :Int8;
+        none @26 :Void;
+        some @27 :Int8;
     }
     signalDb :union {
-        none @27 :Void;
-        some @28 :UInt8;
+        none @28 :Void;
+        some @29 :UInt8;
     }
     noiseDb :union {
-        none @29 :Void;
-        some @30 :UInt8;
+        none @30 :Void;
+        some @31 :UInt8;
     }
     tsfTimestamp :union {
-        none @31 :Void;
-        some @32 :UInt64;
+        none @32 :Void;
+        some @33 :UInt64;
     }
     aggregateInfo :union {
-        none @33 :Void;
+        none @34 :Void;
         some :group {
-            flags @34 :UInt32;
-            id @35 :UInt32;
+            flags @35 :UInt32;
+            id @36 :UInt32;
         }
     }
     zeroLengthPsduType :union {
-        none @36 :Void;
-        some @37 :UInt8;
+        none @37 :Void;
+        some @38 :UInt8;
     }
 }
 
@@ -328,14 +324,7 @@ struct ErfPHdr {
 struct ErfMcPHdr {
     phdr @0 :ErfPHdr;
     ehdrList @1 :List(UInt64); # struct erf_ehdr
-    subhdr :union {
-        ethHdr :group {
-            offset @2 :UInt8;
-            pad @3 :UInt8;
-        }
-        mcHdr @4 :UInt32;
-        aal2Hdr @5 :UInt32;
-    }
+    subhdr @2 :UInt32;
 }
 
 struct SitaPHdr {
@@ -421,22 +410,23 @@ struct NetmonPHdr {
     description @2 :Text;
     subEncap @3 :UInt32;
     subheader :union {
-        eth @4 :EthPHdr;
-        atm @5 :AtmPHdr;
-        ieee80211 @6 :Ieee80211PHdr;
+        none @4 :Void;
+        eth @5 :EthPHdr;
+        atm @6 :AtmPHdr;
+        ieee80211 @7 :Ieee80211PHdr;
     }
 }
 
 struct PacketHeader {
-    caplen @0 :UInt32;
-    len @1 :UInt32;
-    pktEncap @2 :Int32;
-    interfaceId @3 :UInt32;
-    dropCount @4 :UInt64;
-    packFlags @5 :UInt32;
-    interfaceQueue @6 :UInt32;
-    packetId @7 :UInt64;
+    len @0 :UInt32;
+    pktEncap @1 :Int32;
+    interfaceId @2 :UInt32;
+    dropCount @3 :UInt64;
+    packFlags @4 :UInt32;
+    interfaceQueue @5 :UInt32;
+    packetId @6 :UInt64;
     pseudoHeader :union {
+        none @7 :Void;
         eth @8 :EthPHdr;
         dteDce @9 :DteDcePHdr;
         isdn @10 :IsdnPHdr;
@@ -450,7 +440,7 @@ struct PacketHeader {
         mtp2 @18 :Mtp2PHdr;
         k12 @19 :K12PHdr;
         lapd @20 :LapdPHdr;
-        erf @21 :ErfPHdr;
+        erf @21 :ErfMcPHdr;
         sita @22 :SitaPHdr;
         bthci @23 :BthciPHdr;
         btmon @24 :BtmonPHdr;
@@ -463,11 +453,7 @@ struct PacketHeader {
         logcat @31 :LogcatPHdr;
         netmon @32 :NetmonPHdr;
     }
-}
-
-struct FTSpecificHeader {
-    recordType @0 :UInt32;
-    recordLen @1 :UInt32;
+    data @33 :Data;
 }
 
 struct SyscallHeader {
@@ -476,107 +462,53 @@ struct SyscallHeader {
     timestamp @2 :UInt64;
     threadId @3 :UInt64;
     eventLen @4 :UInt32;
-    eventFilelen @5 :UInt32;
-    eventType @6 :UInt16;
-    nparams @7 :UInt32;
-    cpuId @8 :UInt16;
+    eventType @5 :UInt16;
+    nparams @6 :UInt32;
+    cpuId @7 :UInt16;
+    data @8 :Data;
 }
 
 struct SystemdJournalHeader {
-    recordLen @0 :UInt32;
+    data @0 :Data;
 }
 
 struct Record {
-    recType @0 :UInt32;
-    presenceFlags @1 :UInt32;
-    ts @2 :NSTime;
+    presenceFlags @0 :UInt32;
+    ts :group {
+        secs @1 :Int64;
+        nsecs @2 :Int32;
+    }
     tsprec @3 :Int32;
     recHeader :union {
         packetHeader @4 :PacketHeader;
-        ftSpecificHeader @5 :FTSpecificHeader;
-        syscallHeader @6 :SyscallHeader;
-        systemdJournalHeader @7 :SystemdJournalHeader;
+        syscallHeader @5 :SyscallHeader;
+        systemdJournalHeader @6 :SystemdJournalHeader;
     }
-    optComment @8 :Text;
+    optComment :union {
+        none @7 :Void;
+        some @8 :Text;
+    }
     hasCommentChanged @9 :Bool;
-    packetVerdict @10 :List(Data);
-    optionsBuf @11 :Data;
-}
-
-struct MACAddr {
-    addr0 @0 :UInt8;
-    addr1 @1 :UInt8;
-    addr2 @2 :UInt8;
-    addr3 @3 :UInt8;
-    addr4 @4 :UInt8;
-    addr5 @5 :UInt8;
-}
-
-struct EUIAddr {
-    addr0 @0 :UInt8;
-    addr1 @1 :UInt8;
-    addr2 @2 :UInt8;
-    addr3 @3 :UInt8;
-    addr4 @4 :UInt8;
-    addr5 @5 :UInt8;
-    addr6 @6 :UInt8;
-    addr7 @7 :UInt8;
-}
-
-struct IPv4Addr {
-    addr0 @0 :UInt8;
-    addr1 @1 :UInt8;
-    addr2 @2 :UInt8;
-    addr3 @3 :UInt8;
-}
-
-struct IPv6Addr {
-    addr0 @0 :UInt8;
-    addr1 @1 :UInt8;
-    addr2 @2 :UInt8;
-    addr3 @3 :UInt8;
-    addr4 @4 :UInt8;
-    addr5 @5 :UInt8;
-    addr6 @6 :UInt8;
-    addr7 @7 :UInt8;
-    addr8 @8 :UInt8;
-    addr9 @9 :UInt8;
-    addr10 @10 :UInt8;
-    addr11 @11 :UInt8;
-    addr12 @12 :UInt8;
-    addr13 @13 :UInt8;
-    addr14 @14 :UInt8;
-    addr15 @15 :UInt8;
+    packetVerdict :union {
+        none @10 :Void;
+        some @11 :List(Data);
+    }
+    optionsBuf @12 :Data;
 }
 
 struct IPv4Host {
-    addr @0 :IPv4Addr;
+    addr @0 :Data;
     name @1 :Text;
 }
 
 struct IPv6Host {
-    addr @0 :IPv6Addr;
+    addr @0 :Data;
     name @1 :Text;
-}
-
-struct IPv4Iface {
-    addr @0 :IPv4Addr;
-    mask @1 :IPv4Addr;
-}
-
-struct IPv6Iface {
-    addr @0 :IPv6Addr;
-    prefixLen @1 :UInt8;
 }
 
 struct DecryptSecrets {
     type @0 :UInt32;
     secrets @1 :Data;
-}
-
-struct FilterOpt {
-    type @0 :UInt8;
-    filter @1 :Text;
 }
 
 struct IfaceDesc {
@@ -588,47 +520,25 @@ struct IfaceDesc {
         none @2 :Void;
         some @3 :Text;
     }
-    ipv4Addrs @4 :List(IPv4Iface);
-    ipv6Addrs @5 :List(IPv6Iface);
-    macAddr :union {
-        none @6 :Void;
-        some @7 :MACAddr;
-    }
-    euiAddr :union {
-        none @8 :Void;
-        some @9 :EUIAddr;
-    }
     speed :union {
-        none @10 :Void;
-        some @11 :UInt64;
+        none @4 :Void;
+        some @5 :UInt64;
     }
     tsresol :union {
-        none @12 :Void;
-        some @13 :UInt8;
-    }
-    tzone :union {
-        none @14 :Void;
-        some @15 :Int32;
-    }
-    filter :union {
-        none @16 :Void;
-        some @17 :FilterOpt;
+        none @6 :Void;
+        some @7 :UInt8;
     }
     os :union {
-        none @18 :Void;
-        some @19 :Text;
+        none @8 :Void;
+        some @9 :Text;
     }
     fcslen :union {
-        none @20 :Void;
-        some @21 :UInt8;
-    }
-    tsoffset :union {
-        none @22 :Void;
-        some @23 :Int64;
+        none @10 :Void;
+        some @11 :UInt8;
     }
     hardware :union {
-        none @24 :Void;
-        some @25 :Text;
+        none @12 :Void;
+        some @13 :Text;
     }
 }
 
