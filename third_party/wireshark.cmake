@@ -36,28 +36,40 @@ list(APPEND CMAKE_MODULE_PATH
 find_package(GLIB2 "2.32.0" REQUIRED)
 find_package(GMODULE2)
 find_package(GTHREAD2)
+find_package(GCRYPT "1.4.2" REQUIRED)
 find_package(ZLIB)
+find_package(GNUTLS "3.2.0")
+find_package(ZSTD "1.0.0")
+find_package(LZ4)
+find_package(NGHTTP2)
+find_package(LibXml2)
+find_package(CARES)
 
 add_library(Wireshark INTERFACE)
+target_link_libraries(Wireshark INTERFACE
+    ${GLIB2_LIBRARIES}
+    ${GMODULE2_LIBRARIES}
+    ${GTHREAD2_LIBRARIES}
+    ${GCRYPT_LIBRARIES}
+    ${ZLIB_LIBRARIES}
+    ${GNUTLS_LIBRARIES}
+    ${ZSTD_LIBRARIES}
+    ${LZ4_LIBRARIES}
+    ${NGHTTP2_LIBRARIES}
+    ${LIBXML2_LIBRARIES}
+    ${CARES_LIBRARIES}
+)
 if(WIN32)
     target_link_libraries(Wireshark INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwireshark.lib"
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwiretap.lib"
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwsutil.lib"
-        ${GLIB2_LIBRARIES}
-        ${GMODULE2_LIBRARIES}
-        ${GTHREAD2_LIBRARIES}
-        ${ZLIB_LIBRARIES}
     )
 else()
     target_link_libraries(Wireshark INTERFACE
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwireshark.a"
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwiretap.a"
         "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwsutil.a"
-        ${GLIB2_LIBRARIES}
-        ${GMODULE2_LIBRARIES}
-        ${GTHREAD2_LIBRARIES}
-        ${ZLIB_LIBRARIES}
     )
 endif()
 target_include_directories(Wireshark INTERFACE

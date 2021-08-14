@@ -847,7 +847,6 @@ int read() {
 
     out = &out_stream;
 
-    wtap_init(1);
     auto wth = wtap_open_offline("-", WTAP_TYPE_AUTO, &err, &err_info, 0);
     if (wth == nullptr) {
         std::cerr << err_info << '\n';
@@ -878,7 +877,6 @@ int read() {
 
     wtap_close(wth);
     out = nullptr;
-    wtap_cleanup();
 
     return err;
 }
