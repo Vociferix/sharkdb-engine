@@ -16,12 +16,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib.h>
+
 #include <epan/color_filters.h>
 #include <epan/epan.h>
 #include <epan/print.h>
 #include <epan/tap.h>
 #include <epan/timestamp.h>
-#include <glib.h>
 #include <wiretap/wtap.h>
 #include <wsutil/filesystem.h>
 #include <wsutil/privileges.h>
@@ -32,10 +33,11 @@
 #include <string_view>
 
 #include "pref_info.hpp"
+#include "proto_info.hpp"
 #include "read.hpp"
 
 void help(const char* prog) {
-    std::cerr << "Usage: " << prog << " [ read | dissect | pref-info ]\n";
+    std::cerr << "Usage: " << prog << " [ read | dissect | pref-info | proto-info ]\n";
 }
 
 void init() {
@@ -47,8 +49,9 @@ int main(int argc, char** argv) {
     constexpr std::string_view read = "read";
     constexpr std::string_view dissect = "dissect";
     constexpr std::string_view pref_info = "pref-info";
+    constexpr std::string_view proto_info = "proto-info";
 
-    constexpr std::string_view modes[] = { read, dissect, pref_info };
+    constexpr std::string_view modes[] = { read, dissect, pref_info, proto_info };
 
     if (argc < 2) {
         help(*argv);
@@ -113,6 +116,8 @@ int main(int argc, char** argv) {
         return 0;
     } else if (argv[1] == pref_info) {
         return sharkdb::pref_info();
+    } else if (argv[1] == proto_info) {
+        return sharkdb::proto_info();
     }
 
     epan_cleanup();
