@@ -16,7 +16,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+/* Must be included first */
 #include <glib.h>
+/* ---------------------- */
 
 #include <epan/color_filters.h>
 #include <epan/epan.h>
@@ -32,12 +34,14 @@
 #include <iostream>
 #include <string_view>
 
+#include "decode_as_info.hpp"
 #include "pref_info.hpp"
 #include "proto_info.hpp"
 #include "read.hpp"
 
 void help(const char* prog) {
-    std::cerr << "Usage: " << prog << " [ read | dissect | pref-info | proto-info ]\n";
+    std::cerr << "Usage: " << prog
+              << " [ read | dissect | pref-info | proto-info | decode-as-info ]\n";
 }
 
 void init() {
@@ -50,8 +54,9 @@ int main(int argc, char** argv) {
     constexpr std::string_view dissect = "dissect";
     constexpr std::string_view pref_info = "pref-info";
     constexpr std::string_view proto_info = "proto-info";
+    constexpr std::string_view decode_as_info = "decode-as-info";
 
-    constexpr std::string_view modes[] = { read, dissect, pref_info, proto_info };
+    constexpr std::string_view modes[] = { read, dissect, pref_info, proto_info, decode_as_info };
 
     if (argc < 2) {
         help(*argv);
@@ -118,6 +123,8 @@ int main(int argc, char** argv) {
         return sharkdb::pref_info();
     } else if (argv[1] == proto_info) {
         return sharkdb::proto_info();
+    } else if (argv[1] == decode_as_info) {
+        return sharkdb::decode_as_info();
     }
 
     epan_cleanup();
