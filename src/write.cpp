@@ -8,7 +8,7 @@
 #include <cstring>
 #include <vector>
 
-#include "sharkdb_read.capnp.h"
+#include "file_io.capnp.h"
 
 #ifdef _WIN32
 #include <Ws2tcpip.h>

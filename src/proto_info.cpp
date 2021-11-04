@@ -26,7 +26,7 @@
 
 #include <iostream>
 
-#include "sharkdb_proto_info.capnp.h"
+#include "proto_info.capnp.h"
 
 namespace sharkdb {
 

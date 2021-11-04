@@ -9,7 +9,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "sharkdb_decode_as_info.capnp.h"
+#include "decode_as_info.capnp.h"
 
 namespace sharkdb {
 

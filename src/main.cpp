@@ -35,6 +35,7 @@
 #include <string_view>
 
 #include "decode_as_info.hpp"
+#include "file_type_info.hpp"
 #include "pref_info.hpp"
 #include "proto_info.hpp"
 #include "read.hpp"
@@ -42,7 +43,8 @@
 
 void help(const char* prog) {
     std::cerr << "Usage: " << prog
-              << " [ read | write | dissect | pref-info | proto-info | decode-as-info ]\n";
+              << " [ read | write | dissect | pref-info | proto-info | decode-as-info | "
+                 "file-type-info ]\n";
 }
 
 int main(int argc, char** argv) {

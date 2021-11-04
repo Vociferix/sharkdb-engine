@@ -26,7 +26,7 @@
 #include <cstring>
 #include <iostream>
 
-#include "sharkdb_read.capnp.h"
+#include "file_io.capnp.h"
 
 namespace sharkdb {
 

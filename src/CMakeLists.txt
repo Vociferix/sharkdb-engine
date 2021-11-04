@@ -1,8 +1,10 @@
+set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include/sharkdb")
+set(CAPNPC_SRC_PREFIX "${INCLUDE_DIR}")
 capnp_generate_cpp(SHARKDB_SOURCES SHARKDB_HEADERS
-    sharkdb_read.capnp
-    sharkdb_pref_info.capnp
-    sharkdb_proto_info.capnp
-    sharkdb_decode_as_info.capnp
+    "${INCLUDE_DIR}/file_io.capnp"
+    "${INCLUDE_DIR}/pref_info.capnp"
+    "${INCLUDE_DIR}/proto_info.capnp"
+    "${INCLUDE_DIR}/decode_as_info.capnp"
 )
 add_executable(sharkdb-engine
     ${SHARKDB_HEADERS}

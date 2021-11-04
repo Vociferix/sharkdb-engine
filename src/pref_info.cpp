@@ -31,7 +31,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "sharkdb_pref_info.capnp.h"
+#include "pref_info.capnp.h"
 
 namespace sharkdb {
 
