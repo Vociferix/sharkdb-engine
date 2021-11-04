@@ -5,7 +5,7 @@ ExternalProject_Add(wireshark
     CMAKE_GENERATOR "${CMAKE_GENERATOR}"
     CMAKE_ARGS
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        -DENABLE_STATIC=ON
+        #-DENABLE_STATIC=ON
         -DBUILD_sshdump=OFF
         -DBUILD_ciscodump=OFF
         -DBUILD_wireshark=OFF
@@ -67,9 +67,9 @@ if(WIN32)
     )
 else()
     target_link_libraries(Wireshark INTERFACE
-        "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwireshark.a"
-        "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwiretap.a"
-        "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwsutil.a"
+        "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwireshark.so"
+        "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwiretap.so"
+        "${CMAKE_CURRENT_BINARY_DIR}/wireshark/run/libwsutil.so"
     )
 endif()
 target_include_directories(Wireshark INTERFACE

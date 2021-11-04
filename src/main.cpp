@@ -38,25 +38,23 @@
 #include "pref_info.hpp"
 #include "proto_info.hpp"
 #include "read.hpp"
+#include "write.hpp"
 
 void help(const char* prog) {
     std::cerr << "Usage: " << prog
-              << " [ read | dissect | pref-info | proto-info | decode-as-info ]\n";
-}
-
-void init() {
-    init_process_policies();
-    relinquish_special_privs_perm();
+              << " [ read | write | dissect | pref-info | proto-info | decode-as-info ]\n";
 }
 
 int main(int argc, char** argv) {
     constexpr std::string_view read = "read";
+    constexpr std::string_view write = "write";
     constexpr std::string_view dissect = "dissect";
     constexpr std::string_view pref_info = "pref-info";
     constexpr std::string_view proto_info = "proto-info";
     constexpr std::string_view decode_as_info = "decode-as-info";
 
-    constexpr std::string_view modes[] = { read, dissect, pref_info, proto_info, decode_as_info };
+    constexpr std::string_view modes[] = { read,      write,      dissect,
+                                           pref_info, proto_info, decode_as_info };
 
     if (argc < 2) {
         help(*argv);
@@ -116,6 +114,8 @@ int main(int argc, char** argv) {
 
     if (argv[1] == read) {
         return sharkdb::read();
+    } else if (argv[1] == write) {
+        return sharkdb::write();
     } else if (argv[1] == dissect) {
         std::cerr << "dissect mode\n";
         return 0;

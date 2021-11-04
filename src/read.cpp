@@ -72,18 +72,50 @@ static int write_new_idbs(wtap* wth) {
     char* str_val = nullptr;
     guint64 u64_val = 0;
     guint8 u8_val = 0;
-    capnp::MallocMessageBuilder message;
-    auto entry = message.initRoot<CaptureEntry>();
-    auto iface = entry.initIface();
-    auto name = iface.initName();
-    auto description = iface.initDescription();
-    auto speed = iface.initSpeed();
-    auto tsresol = iface.initTsresol();
-    auto os = iface.initOs();
-    auto fcslen = iface.initFcslen();
-    auto hardware = iface.initHardware();
 
     while ((idb = wtap_get_next_interface_description(wth)) != nullptr) {
+        capnp::MallocMessageBuilder message;
+        auto entry = message.initRoot<CaptureEntry>();
+        auto iface = entry.initIface();
+        auto name = iface.initName();
+        auto description = iface.initDescription();
+        auto speed = iface.initSpeed();
+        auto tsresol = iface.initTsresol();
+        auto os = iface.initOs();
+        auto fcslen = iface.initFcslen();
+        auto hardware = iface.initHardware();
+
+        auto mand = (wtapng_if_descr_mandatory_t*)wtap_block_get_mandatory_data(idb);
+        iface.setEncap(mand->wtap_encap);
+        iface.setTimeUnitsPerSecond(mand->time_units_per_second);
+        iface.setSnapLen(mand->snap_len);
+        switch (mand->tsprecision) {
+        case WTAP_TSPREC_PER_PACKET:
+            iface.setTsprecision(TSPrec::PER_PACKET);
+            break;
+        case WTAP_TSPREC_SEC:
+            iface.setTsprecision(TSPrec::SEC);
+            break;
+        case WTAP_TSPREC_DSEC:
+            iface.setTsprecision(TSPrec::DSEC);
+            break;
+        case WTAP_TSPREC_CSEC:
+            iface.setTsprecision(TSPrec::CSEC);
+            break;
+        case WTAP_TSPREC_MSEC:
+            iface.setTsprecision(TSPrec::MSEC);
+            break;
+        case WTAP_TSPREC_USEC:
+            iface.setTsprecision(TSPrec::USEC);
+            break;
+        case WTAP_TSPREC_NSEC:
+            iface.setTsprecision(TSPrec::NSEC);
+            break;
+        default:
+            iface.setTsprecision(TSPrec::UNKNOWN);
+            break;
+        }
+
         if (wtap_block_get_string_option_value(idb, OPT_IDB_NAME, &str_val) ==
             WTAP_OPTTYPE_SUCCESS) {
             name.setSome(str_val);
@@ -837,6 +869,43 @@ static int write_record(wtap* wth, wtap_rec* rec, Buffer* buf) {
     return 0;
 }
 
+int write_capture_info(wtap* wth) {
+    capnp::MallocMessageBuilder message;
+    auto info = message.initRoot<CaptureInfo>();
+    info.setFiletype(static_cast<FileType>(wtap_file_type_subtype(wth)));
+    info.setEncap(static_cast<Encap>(wtap_file_encap(wth)));
+    info.setSnaplen(wtap_snapshot_length(wth));
+    switch (wtap_file_tsprec(wth)) {
+    default:
+    case WTAP_TSPREC_UNKNOWN:
+        info.setTsprec(TSPrec::UNKNOWN);
+        break;
+    case WTAP_TSPREC_PER_PACKET:
+        info.setTsprec(TSPrec::PER_PACKET);
+        break;
+    case WTAP_TSPREC_SEC:
+        info.setTsprec(TSPrec::SEC);
+        break;
+    case WTAP_TSPREC_DSEC:
+        info.setTsprec(TSPrec::DSEC);
+        break;
+    case WTAP_TSPREC_CSEC:
+        info.setTsprec(TSPrec::CSEC);
+        break;
+    case WTAP_TSPREC_MSEC:
+        info.setTsprec(TSPrec::MSEC);
+        break;
+    case WTAP_TSPREC_USEC:
+        info.setTsprec(TSPrec::USEC);
+        break;
+    case WTAP_TSPREC_NSEC:
+        info.setTsprec(TSPrec::NSEC);
+        break;
+    }
+    capnp::writeMessage(*out, message);
+    return 0;
+}
+
 int read() {
     int err = 0;
     gchar* err_info = nullptr;
@@ -852,6 +921,14 @@ int read() {
         std::cerr << err_info << '\n';
         return err;
     }
+
+    err = write_capture_info(wth);
+    if (err != 0) {
+        wtap_close(wth);
+        out = nullptr;
+        return err;
+    }
+
     wtap_set_cb_new_ipv4(wth, add_ipv4_name);
     wtap_set_cb_new_ipv6(wth, add_ipv6_name);
     wtap_set_cb_new_secrets(wth, add_secrets);

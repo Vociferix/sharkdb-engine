@@ -7,6 +7,7 @@ capnp_generate_cpp(SHARKDB_SOURCES SHARKDB_HEADERS
 add_executable(sharkdb-engine
     ${SHARKDB_HEADERS}
     read.hpp
+    write.hpp
     pref_info.hpp
     proto_info.hpp
     decode_as_info.hpp
@@ -14,6 +15,7 @@ add_executable(sharkdb-engine
     ${SHARKDB_SOURCES}
     main.cpp
     read.cpp
+    write.cpp
     pref_info.cpp
     proto_info.cpp
     decode_as_info.cpp
