@@ -876,7 +876,7 @@ struct DecryptSecrets {
 }
 
 struct IfaceDesc {
-    encap @0 :Int32;
+    encap @0 :Encap;
     timeUnitsPerSecond @1 :UInt64;
     tsprecision @2 :TSPrec;
     snapLen @3 :UInt32;

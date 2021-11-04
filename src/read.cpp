@@ -86,7 +86,11 @@ static int write_new_idbs(wtap* wth) {
         auto hardware = iface.initHardware();
 
         auto mand = (wtapng_if_descr_mandatory_t*)wtap_block_get_mandatory_data(idb);
-        iface.setEncap(mand->wtap_encap);
+        if (mand->wtap_encap == WTAP_ENCAP_PER_PACKET) {
+            iface.setEncap(Encap::PER_PACKET);
+        } else {
+            iface.setEncap(static_cast<Encap>(mand->wtap_encap));
+        }
         iface.setTimeUnitsPerSecond(mand->time_units_per_second);
         iface.setSnapLen(mand->snap_len);
         switch (mand->tsprecision) {
