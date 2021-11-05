@@ -36,6 +36,7 @@
 #include <string_view>
 
 #include "decode_as_info.hpp"
+#include "dissect.hpp"
 #include "encap_info.hpp"
 #include "file_type_info.hpp"
 #include "pref_info.hpp"
@@ -140,8 +141,7 @@ int main(int argc, char** argv) {
     } else if (argv[1] == write) {
         return sharkdb::write();
     } else if (argv[1] == dissect) {
-        std::cerr << "dissect mode\n";
-        return 0;
+        return sharkdb::dissect();
     } else if (argv[1] == pref_info) {
         return sharkdb::pref_info();
     } else if (argv[1] == proto_info) {

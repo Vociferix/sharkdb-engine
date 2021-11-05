@@ -7,6 +7,7 @@ capnp_generate_cpp(SHARKDB_SOURCES SHARKDB_HEADERS
     "${INCLUDE_DIR}/decode_as_info.capnp"
     "${INCLUDE_DIR}/file_type_info.capnp"
     "${INCLUDE_DIR}/encap_info.capnp"
+    "${INCLUDE_DIR}/dissect.capnp"
 )
 add_executable(sharkdb-engine
     ${SHARKDB_HEADERS}
@@ -17,6 +18,7 @@ add_executable(sharkdb-engine
     decode_as_info.hpp
     file_type_info.hpp
     encap_info.hpp
+    dissect.hpp
 
     ${SHARKDB_SOURCES}
     main.cpp
@@ -27,6 +29,7 @@ add_executable(sharkdb-engine
     decode_as_info.cpp
     file_type_info.cpp
     encap_info.cpp
+    dissect.cpp
 )
 target_link_libraries(sharkdb-engine PRIVATE CapnProto::capnp Wireshark)
 target_include_directories(sharkdb-engine PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
