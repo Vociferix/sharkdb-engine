@@ -815,10 +815,7 @@ static int write_iface(wtap_dumper* wdh, IfaceDesc::Reader iface_in) {
     auto idb = wtap_block_create(WTAP_BLOCK_IF_DESCR);
 
     auto mand = (wtapng_if_descr_mandatory_t*)wtap_block_get_mandatory_data(idb);
-    mand->wtap_encap = static_cast<int>(iface_in.getEncap());
-    if (mand->wtap_encap == static_cast<int>(Encap::PER_PACKET)) {
-        mand->wtap_encap = WTAP_ENCAP_PER_PACKET;
-    }
+    mand->wtap_encap = iface_in.getEncap();
     mand->time_units_per_second = iface_in.getTimeUnitsPerSecond();
     mand->snap_len = iface_in.getSnapLen();
     switch (iface_in.getTsprecision()) {
@@ -996,8 +993,8 @@ int write() {
         kj::std::StdInputStream in_stream{ std::cin };
         capnp::InputStreamMessageReader message{ in_stream };
         auto info = message.getRoot<CaptureInfo>();
-        filetype = static_cast<int>(info.getFiletype());
-        params.encap = static_cast<int>(info.getEncap());
+        filetype = info.getFiletype();
+        params.encap = info.getEncap();
         params.snaplen = static_cast<int>(info.getSnaplen());
         switch (info.getTsprec()) {
         default:

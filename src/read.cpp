@@ -86,11 +86,7 @@ static int write_new_idbs(wtap* wth) {
         auto hardware = iface.initHardware();
 
         auto mand = (wtapng_if_descr_mandatory_t*)wtap_block_get_mandatory_data(idb);
-        if (mand->wtap_encap == WTAP_ENCAP_PER_PACKET) {
-            iface.setEncap(Encap::PER_PACKET);
-        } else {
-            iface.setEncap(static_cast<Encap>(mand->wtap_encap));
-        }
+        iface.setEncap(mand->wtap_encap);
         iface.setTimeUnitsPerSecond(mand->time_units_per_second);
         iface.setSnapLen(mand->snap_len);
         switch (mand->tsprecision) {
@@ -876,8 +872,8 @@ static int write_record(wtap* wth, wtap_rec* rec, Buffer* buf) {
 int write_capture_info(wtap* wth) {
     capnp::MallocMessageBuilder message;
     auto info = message.initRoot<CaptureInfo>();
-    info.setFiletype(static_cast<FileType>(wtap_file_type_subtype(wth)));
-    info.setEncap(static_cast<Encap>(wtap_file_encap(wth)));
+    info.setFiletype(wtap_file_type_subtype(wth));
+    info.setEncap(wtap_file_encap(wth));
     info.setSnaplen(wtap_snapshot_length(wth));
     switch (wtap_file_tsprec(wth)) {
     default:
